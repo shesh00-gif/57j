@@ -1,0 +1,158 @@
+sign up:
+→ google
+→ git
+→ docker
+→ docker hub
+
+---------Maven--------------
+Import Git Project
+→ paste URL
+→ Clone URL
+→ Select main
+→ Next
+→ Finish
+
+OR
+
+make directory
+→ git clone "<URL>"
+→ Import → Maven → Existing Maven Projects → Browse
+
+→ Fix pom.xml
+→ Right click project → Maven → Update Project
+
+→ Right click project → Run As → Maven clean
+→ Right click project → Run As → Maven install
+→ Right click project → Run As → Maven test
+
+→ Right click project → Run As → Maven build
+→ Goal = clean package
+→ Apply → Run
+
+→ WAR file generated in target folder
+→ Deploy/run WAR using Tomcat
+or
+→ JAR file generated in target folder
+→ Run JAR using: java -jar <filename>.jar
+
+
+→ Window → Show View → Servers
+→ Tomcat Server → Start
+
+→ Right click project
+→ Run As → Run on Server/Run as java application
+→ Localhost
+→ Select Tomcat Server
+→ Finish
+
+→ Google Chrome opens
+→ HMS website loads
+
+→ pom.xml mistakes:
+1.spelling mistakes (artifactid,groupid,etc)
+2.versions missing (junit,etc)
+3.mysql->com.mysql and mysql-library -> mysql-connector-j
+4.duplicate configs
+5.jar or war
+6.versions are wrong 
+7.url's port number
+8.overriding version after mentioning in dependency managment 
+9.servlet missing
+10. no main manifest attribute (be sure to add jar plugin)
+
+
+
+--------Git/GitHub--------------
+Right click on project
+→ Show in → Git Bash / Terminal
+→ nano .gitignore(only if not there)
+     target/
+     .class
+     .classpath
+     .project
+     .settings/
+     .sts/
+
+→ git init
+→ git config --global user.name "Your Name"
+→ git config --global user.email "Your Email"
+→ git add .
+→ git status
+→ git commit -m "Initial commit"
+→ Authentication may be asked
+→ Save credentials in Credential Manager
+→ git remote -v
+→ git remote remove origin
+→ git remote add origin <Your GitHub Link>
+→ git push -u origin main
+→ run the git commands
+
+---------Docker------------
+Open Git Bash / Terminal
+→ docker logout
+→ docker login
+
+→ Create Dockerfile
+→ nano Dockerfile
+→ Enter Dockerfile contents
+
+For JAR:
+→ FROM eclipse-temurin:jdk-17
+→ WORKDIR /app.dir
+→ COPY target/urfile.jar app.jar
+→ CMD ["java","-jar","app.jar"]
+
+For WAR:
+→ FROM tomcat:9.0
+→ COPY target/urfile.war /usr/local/tomcat/webapps/ROOT.war
+→ EXPOSE 8080
+→ CMD ["catalina.sh","run"]
+
+→ Ctrl + S
+→ Ctrl + X
+
+→ docker build -t smth-app .
+→ docker images
+
+For WAR:
+→ docker run -d --name some-container -p 7012:8080 smth-app
+
+For JAR:
+→ docker run smth-app
+
+→ docker tag smth-app <dockerhub_username>/smth-app
+→ docker images
+→ docker push <dockerhub_username>/smth-app
+
+If container already exists:
+→ docker stop smth-container
+→ docker rm smth-container
+→ docker ps -a
+
+To remove image:
+→ docker rmi smth-app
+
+
+Common errors:
+1)no main manifest error 
+fix1:
+<plugin>
+     <artifactId>maven-jar-plugin</artifactId>
+     <configuration>
+         <archive>
+          <manifest>
+            <mainClass>CSMB.CEMS.App</mainClass>
+          </manifest>
+         </archive>
+     </configuration>
+</plugin>
+add this plugin inside plugins
+
+fix2:
+FROM eclipse-temurin:17-jdk
+WORKDIR /app
+COPY target/java-exam-practice-0.0.1-SNAPSHOT.jar app.jar
+CMD ["java","-cp","app.jar","groupId.artifactId.App"]
+
+2)sometimes dependencies dont get updated
+fix: use maven and update project
