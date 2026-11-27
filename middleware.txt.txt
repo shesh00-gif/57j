@@ -1,0 +1,255 @@
+================================================================================
+SOFTWARE ENGINEERING LAB EXTERNAL EXAMINATION - COMPLETE REFERENCE GUIDE
+Question 1: SRS | Question 2: UML Diagrams | Question 3 & 4: Git & Nagios
+================================================================================
+
+--------------------------------------------------------------------------------
+QUESTION 1: SOFTWARE REQUIREMENTS SPECIFICATION (SRS) TEMPLATE
+--------------------------------------------------------------------------------
+Project / Scenario Name: [Insert Application Name Here]
+Course: Software Engineering (SE) Lab
+
+a. Abstract
+-----------
+[App Name] is an easy-to-use software system created to manage [insert main purpose, e.g., daily library work / hospital operations / online food delivery]. It allows users to [main task 1, e.g., search and view availability], [main task 2, e.g., book or place orders online], and [main task 3, e.g., make secure digital payments]. The system is designed for [primary users, e.g., customers / patients / students] and [administrators / staff] to handle all day-to-day activities smoothly without manual paperwork. Overall, it saves time, reduces human errors, and keeps all records safe and organized in one place.
+
+b. Functional Requirements (FR)
+-------------------------------
+1. User Registration: The system shall allow new [users / customers] to create an account using their basic details like name, email, and phone number.
+
+2. Secure Login: The system shall allow registered users and [admins / staff] to log in securely using their username and password.
+
+3. Profile Management: The system shall allow users to view, edit, and update their personal profile details and passwords anytime.
+
+4. Search & Filter: The system shall allow users to search for [items / doctors / books / tickets] and filter results by category, price, or availability.
+
+5. View Details: The system shall display complete information, availability status, and pricing for each [item / service] selected by the user.
+
+6. Core Action (Booking / Ordering): The system shall allow users to [book an appointment / place an order / borrow a book / reserve a seat] online in real time.
+
+7. Payment & Billing: The system shall calculate the total amount, support online payment methods, and generate a digital receipt or invoice.
+
+8. Notifications & Alerts: The system shall send automatic SMS or email notifications to users for [booking confirmations / order updates / reminders].
+
+9. Admin Management: The system shall allow the administrator to add, update, or remove [items / schedules / records] and manage user accounts.
+
+10. Reports & History: The system shall allow users to view their past [order / booking] history and let the admin generate daily or monthly summary reports.
+
+c. Non-Functional Requirements (NFR)
+------------------------------------
+1. Performance (Speed): The system shall load pages and respond to user actions within 2 seconds without lagging.
+
+2. Security & Privacy: The system shall protect user passwords and personal data using encryption so unauthorized people cannot access them.
+
+3. Availability: The system shall stay online and work smoothly 24/7 with minimal downtime.
+
+4. Usability: The system shall have a clean, simple interface so any new user can operate it without needing special training.
+
+5. Reliability: The system shall save all user entries properly and prevent data loss even if the internet disconnects or the app crashes.
+
+6. Scalability: The system shall work smoothly even when hundreds of users use it at the exact same time.
+
+7. Recoverability (Backup): The system shall automatically back up all data every day so records can be easily restored if anything goes wrong.
+
+8. Compatibility: The system shall run properly across different web browsers, mobile phones, and computers.
+
+9. Maintainability: The system shall be built in separate modules so developers can fix bugs or add new features without stopping the whole app.
+
+10. Auditability: The system shall keep a record of who logged in and what changes were made, along with the date and time.
+
+
+--------------------------------------------------------------------------------
+QUESTION 2: FOUR CORE UML DIAGRAMS (ONLINE LIBRARY MANAGEMENT SYSTEM)
+--------------------------------------------------------------------------------
+
+1. USE CASE DIAGRAM
+-------------------
+Purpose: Captures functional requirements by mapping external users (Actors)
+to system actions (Use Cases) inside a system boundary.
+
+Notations:
+  - Actor: Stick figure outside the system boundary
+  - Use Case: Oval inside the system boundary
+  - <<include>>: Mandatory sub-step (dashed arrow pointing to included case)
+  - <<extend>>: Optional/conditional action (dashed arrow pointing to base case)
+
+Diagram Structure:
+                 +-----------------------------------------------+
+                 |        Online Library Management System       |
+                 |                                               |
+   [Student] ----+---> ( Search Book )                           |
+       |         |                                               |
+       +---------+---> ( Return Book ) <--- ( Manage Books ) <---+--- [Librarian]
+                 |          ^                                    |         |
+                 |          | <<extend>>                         |         |
+                 |     ( Pay Fine )         ( Issue Book ) <-----+---------+
+                 |                                |              |
+                 |                                | <<include>>  |
+                 |                                v              |
+                 |                         ( Verify Login )      |
+                 +-----------------------------------------------+
+
+
+2. CLASS DIAGRAM
+----------------
+Purpose: Represents static object-oriented structure: classes, attributes (-),
+methods (+), inheritance, composition, and multiplicities.
+
+Diagram Structure:
+   +-----------------------+                  +-----------------------+
+   |         User          |                  |        Catalog        |
+   +-----------------------+                  +-----------------------+
+   | - userId: int         |                  | - totalBooks: int     |
+   | - name: String        |                  +-----------------------+
+   +-----------------------+                  | + addBook(): void     |
+   | + login(): boolean    |                  +-----------------------+
+   +-----------------------+                              | 1
+               ^                                         <#> (Composition)
+               | (Inheritance)                            | 1..*
+   +-----------------------+     +---------------+        v
+   |        Student        |     |  LoanRecord   |   +--------------------+
+   +-----------------------+     +---------------+   |        Book        |
+   | - rollNo: String      | 1   | - loanId: int |   +--------------------+
+   | - booksIssued: int    |-----| - dueDate:Date|---| - isbn: String     |
+   +-----------------------+ 0..5+---------------+ 1 | - available: bool  |
+   | + searchBook(): void  |     | + calcFine()  |   +--------------------+
+   | + returnBook(): void  |     +---------------+   | + setStatus(): void|
+   +-----------------------+                         +--------------------+
+
+
+3. SEQUENCE DIAGRAM (SCENARIO: ISSUE BOOK)
+------------------------------------------
+Purpose: Shows chronological message passing between objects along vertical
+lifelines, with solid arrows (calls) and dashed arrows (return responses).
+
+Diagram Structure:
+   [:Librarian]          [:LibraryUI]          [:MemberDB]          [:BookDB]
+        |                     |                     |                   |
+        |--1:enterIssueData-->|                     |                   |
+        |                     |--2:verifyMember---->|                   |
+        |                     |<--3:memberValid-----|                   |
+        |                     |                     |                   |
+        |                     |--------4:checkStock(isbn)-------------->|
+        |                     |<-------5:bookAvailable------------------|
+        |                     |--------6:assignBook(id, isbn)---------->|
+        |<--7:printReceipt()--|                     |                   |
+        |                     |                     |                   |
+
+
+4. COMPONENT DIAGRAM
+--------------------
+Purpose: Models high-level software architecture by grouping modules into
+Components connected via Provided (ball) and Required (socket) interfaces.
+
+Diagram Structure:
+   +------------------+   ILibraryAPI   +-------------------+   JDBC/SQL   +--------------+
+   | <<component>>    |------(O)--------| <<component>>     |-----(O)------| <<database>> |
+   | Web Portal UI    |                 | Library Service   |              | MySQL DB     |
+   +------------------+                 +-------------------+              +--------------+
+                                                  |
+                                             (O) ISMTPNotify
+                                                  |
+                                        +-------------------+
+                                        | <<component>>     |
+                                        | Email/SMS Gateway |
+                                        +-------------------+
+
+
+--------------------------------------------------------------------------------
+QUESTION 3: GIT COMMAND DEMONSTRATIONS (WINDOWS CMD / GIT BASH)
+--------------------------------------------------------------------------------
+Where to run: Windows CMD, PowerShell, or Git Bash.
+
+1. Initial Setup, Staging & Committing
+--------------------------------------
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+
+mkdir se-lab-git
+cd se-lab-git
+git init
+
+echo # SE Lab External > README.md
+git status
+git add README.md
+git commit -m "Initial commit: Add README"
+
+echo Git demonstration >> README.md
+git diff
+git commit -am "Update README with description"
+
+git log --oneline
+
+2. Branching, Merging & Undoing Changes
+---------------------------------------
+git checkout -b feature-branch
+
+echo console.log("Hello SE Lab"); > app.js
+git add app.js
+git commit -m "Add app.js in feature branch"
+
+git checkout main
+git merge feature-branch
+git branch -d feature-branch
+
+# Undoing changes (Common viva follow-ups)
+git reset HEAD app.js          # Unstage a file without losing edits
+git checkout -- app.js         # Discard uncommitted local changes
+git revert <commit-hash>       # Safely revert an earlier commit
+
+3. Connecting to GitHub (Push & Pull)
+-------------------------------------
+# Create a blank repository on GitHub first and copy its HTTPS URL
+git remote add origin https://github.com/<username>/<repo-name>.git
+git branch -M main
+git push -u origin main
+
+# Pull remote edits made directly on GitHub
+git pull origin main
+
+
+--------------------------------------------------------------------------------
+QUESTION 4: NAGIOS MONITORING EXPERIMENT (LINUX TERMINAL)
+--------------------------------------------------------------------------------
+Where to run: Linux Terminal (Ubuntu/CentOS VM, WSL via 'wsl' in CMD, or EC2).
+
+1. Verify Running Services & Configuration
+------------------------------------------
+sudo systemctl status nagios
+sudo systemctl status apache2
+
+sudo /usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
+
+2. Configure Host & Service Monitoring
+--------------------------------------
+# Open /usr/local/nagios/etc/nagios.cfg and ensure cfg_dir or localhost.cfg
+# is uncommented, then add the following host and service definitions:
+
+define host {
+    use                     linux-server
+    host_name               my-test-server
+    alias                   SE Lab Test Server
+    address                 127.0.0.1
+}
+
+define service {
+    use                     generic-service
+    host_name               my-test-server
+    service_description     HTTP Check
+    check_command           check_http
+}
+
+3. Validate, Restart & Verify Dashboard
+---------------------------------------
+# Re-verify configuration (Must show: Total Warnings: 0, Total Errors: 0)
+sudo /usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
+
+# Restart Nagios and Apache
+sudo systemctl restart nagios
+sudo systemctl restart apache2
+
+# Browser Verification:
+# 1. Open http://localhost/nagios (or http://<VM-IP>/nagios)
+# 2. Log in (default username: nagiosadmin)
+# 3. Click Hosts / Services in sidebar -> Verify status is UP / OK (green)
+================================================================================
