@@ -1,0 +1,15 @@
+node {
+    stage('Checkout') {
+        git branch: 'main', url: 'https://github.com/shesh00-gif/57j.git'
+    }
+    stage('Build') {
+        bat 'dir'
+    }
+    stage('Test') {
+        if (!fileExists('README.md')) { error('README.md missing!') }
+        echo 'Verified!'
+    }
+    stage('Archive') {
+        archiveArtifacts artifacts: '**/*'
+    }
+}
